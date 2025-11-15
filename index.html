@@ -1,252 +1,339 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beautiful Treasure - Confidence Program</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* Custom styles for Wix compatibility and aesthetic polish */
-        :root {
-            --purple-700: #6d28d9;
-            --yellow-500: #f59e0b;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f9fafb; /* bg-gray-50 */
-        }
-        .icon-lg { width: 40px; height: 40px; }
-        .icon-md { width: 24px; height: 24px; }
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+    Sparkles, Crown, Heart, Zap, Shield, Smile, MessageCircle, MapPin, 
+    CheckCircle, Lightbulb, User, MessageSquare, Lock, Home 
+} from 'lucide-react';
 
-        /* Velo/Wix Note: In a real Wix site, you would use Wix's internal linking for navigation */
-    </style>
-</head>
-<body>
+// --- Program Data based on the Curriculum Overview ---
+const treasureLevels = [
+    { 
+        id: 1, 
+        theme: "Me, Myself, and I", 
+        focus: "Discovering Identity", 
+        icon: User, 
+        color: "bg-pink-100", 
+        border: "border-pink-500",
+        activities: [
+            { id: 'a1', title: "My Unique Gem", prompt: "List three things that make you special and unlike anyone else!", type: 'input' },
+            { id: 'a2', title: "Favorite Things Quiz", prompt: "Choose your favorite color, food, and animal to create your personal profile!", type: 'choice' },
+        ] 
+    },
+    { 
+        id: 2, 
+        theme: "My Superpower: Confidence", 
+        focus: "Positive Self-Talk", 
+        icon: Sparkles, 
+        color: "bg-yellow-100", 
+        border: "border-yellow-500",
+        activities: [
+            { id: 'a1', title: "Affirmation Station", prompt: "Write one confident sentence about yourself to save in your confidence jar!", type: 'input' },
+            { id: 'a2', title: "Confidence Walk", prompt: "Practice your superpower pose in the mirror!", type: 'prompt' },
+        ] 
+    },
+    { 
+        id: 3, 
+        theme: "Dealing with Big Feelings & Bullies", 
+        focus: "Resilience & Safety", 
+        icon: Shield, 
+        color: "bg-purple-100", 
+        border: "border-purple-500",
+        activities: [
+            { id: 'a1', title: "Feelings Check-in", prompt: "How do you feel today? Identify the emotion and pick a calm-down tool.", type: 'choice' },
+            { id: 'a2', title: "The Strong Voice", prompt: "Write down three ways you can tell a bully 'STOP' clearly and firmly.", type: 'input' },
+        ] 
+    },
+    { 
+        id: 4, 
+        theme: "Being a Great Friend", 
+        focus: "Empathy and Kindness", 
+        icon: Heart, 
+        color: "bg-red-100", 
+        border: "border-red-500",
+        activities: [
+            { id: 'a1', title: "Kindness Ripple Log", prompt: "What is one kind thing you did for someone else this week?", type: 'input' },
+            { id: 'a2', title: "Empathy Glasses", prompt: "Imagine your friend is sad. What do you think they need right now?", type: 'input' },
+        ] 
+    },
+    { 
+        id: 5, 
+        theme: "Making and Keeping Friends", 
+        focus: "Social Skills", 
+        icon: Smile, 
+        color: "bg-green-100", 
+        border: "border-green-500",
+        activities: [
+            { id: 'a1', title: "Conversation Starter Drill", prompt: "Practice two ways to say hello to a new person (e.g., 'I like your...').", type: 'prompt' },
+            { id: 'a2', title: "Friendship Recipe", prompt: "List the 3 best 'ingredients' for a good friendship (e.g., listening, sharing).", type: 'input' },
+        ] 
+    },
+    { 
+        id: 6, 
+        theme: "Powerful Communication", 
+        focus: "Assertive Voice", 
+        icon: MessageCircle, 
+        color: "bg-blue-100", 
+        border: "border-blue-500",
+        activities: [
+            { id: 'a1', title: "The 'I Feel' Builder", prompt: "Write one 'I feel...' statement about something that bothered you today.", type: 'input' },
+            { id: 'a2', title: "Active Listening Game", prompt: "List the three rules of being a super listener (look, wait, don't interrupt).", type: 'input' },
+        ] 
+    },
+];
 
-    <!-- Header & Navigation -->
-    <header class="bg-white shadow-lg sticky top-0 z-20 border-b-4 border-purple-300">
-        <div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto p-4">
-            <div class="flex items-center space-x-2 mb-3 md:mb-0">
-                <i class="lucide-crown icon-md text-yellow-500" style="fill:gold;"></i>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-purple-700 tracking-tight">
-                    Beautiful Treasure
-                </h1>
+const initialProgress = { 1: true, 2: false, 3: false, 4: false, 5: false, 6: false };
+
+/** Treasure Map Navigation Component: Shows all 6 weeks and their completion status. */
+const TreasureMap = ({ currentLevel, setLevel, completedLevels }) => {
+    return (
+        <div className="bg-purple-100 p-4 md:p-6 rounded-2xl shadow-xl border-4 border-purple-300">
+            <h2 className="text-xl font-bold mb-4 text-purple-700 flex items-center">
+                <MapPin className="w-5 h-5 mr-2" /> Your Adventure Map
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                {treasureLevels.map((level) => {
+                    const isCompleted = completedLevels[level.id];
+                    const isActive = level.id === currentLevel;
+                    // Level is locked if it's not Week 1 AND the previous week is not complete
+                    const isLocked = level.id > 1 && !completedLevels[level.id - 1] && !isCompleted;
+
+                    let statusIcon;
+                    if (isCompleted) {
+                        statusIcon = <CheckCircle className="w-5 h-5 text-green-500 fill-white" />;
+                    } else if (isLocked) {
+                        statusIcon = <Lock className="w-5 h-5 text-gray-400" />;
+                    } else {
+                        statusIcon = <level.icon className="w-5 h-5" />;
+                    }
+
+                    return (
+                        <button
+                            key={level.id}
+                            onClick={() => !isLocked && setLevel(level.id)}
+                            className={`
+                                p-3 rounded-xl transition duration-200 text-center relative
+                                ${level.color} border-2 
+                                ${isLocked ? 'opacity-50 cursor-not-allowed border-gray-300' : level.border}
+                                ${isActive ? 'ring-4 ring-offset-2 ring-purple-500 shadow-lg scale-105' : 'hover:shadow-md hover:scale-[1.02]'}
+                            `}
+                            disabled={isLocked}
+                        >
+                            <span className={`absolute top-1 right-1 p-0.5 rounded-full ${isCompleted ? 'bg-white' : ''}`}>
+                                {statusIcon}
+                            </span>
+                            <div className={`text-xl font-extrabold mb-1 ${isActive ? 'text-purple-700' : 'text-purple-600'}`}>
+                                W{level.id}
+                            </div>
+                            <p className="text-xs font-medium text-gray-600 leading-tight">
+                                {level.theme}
+                            </p>
+                        </button>
+                    );
+                })}
             </div>
-
-            <!-- Navigation Buttons (These would be Wix page links) -->
-            <nav class="flex space-x-2 sm:space-x-4">
-                <a href="#home" class="nav-item">Home</a>
-                <a href="#details" class="nav-item">Program Details</a>
-                <a href="#contact" class="nav-item">Contact</a>
-                <!-- The Portal link requires custom Velo logic for login/member areas -->
-            </nav>
-
-            <button class="mt-3 md:mt-0 px-4 py-1.5 rounded-full font-bold text-sm transition duration-150 shadow-md bg-green-500 hover:bg-green-600 text-white">
-                Login / Enroll
-            </button>
         </div>
-    </header>
+    );
+};
 
-    <main class="max-w-7xl mx-auto p-4 md:p-8">
+/** Interactive Level Content Component: Displays activities for the selected week. */
+const LevelView = ({ levelData, setCompletedLevels }) => {
+    // NOTE: In a real app, activityState would be loaded from and saved to Firestore.
+    const [activityState, setActivityState] = useState({});
+    const [message, setMessage] = useState('');
 
-        <!-- --- Page Sections --- -->
+    // Reset state when a new level is selected
+    useEffect(() => {
+        setActivityState({});
+        setMessage('');
+    }, [levelData]);
 
-        <!-- 1. Home Page -->
-        <section id="home" class="page-section text-center p-8 md:p-12 bg-white rounded-2xl shadow-2xl">
-            <i class="lucide-crown icon-lg text-yellow-500 mx-auto mb-4" style="fill:gold;"></i>
-            <h2 class="text-5xl font-extrabold text-purple-800 mb-4">
-                Unlock Your Inner Treasure!
-            </h2>
-            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                Beautiful Treasure is the 6-week program designed to build **unshakeable self-worth**, teach girls to **overcome bullying**, and develop **assertive communication** skills.
-            </p>
+    const handleInput = (activityId, value) => {
+        setActivityState(prev => ({ ...prev, [activityId]: value }));
+    };
 
-            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-10">
-                <a href="#details" class="bg-red-500 text-white py-3 px-8 rounded-full text-lg font-bold hover:bg-red-600 transition shadow-lg">
-                    See Program Details
-                </a>
-                <a href="#contact" class="bg-purple-500 text-white py-3 px-8 rounded-full text-lg font-bold hover:bg-purple-600 transition shadow-lg">
-                    Enroll Today
-                </a>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6 mt-12 text-left">
-                <!-- Benefit Card 1 -->
-                <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
-                    <i class="lucide-shield icon-md text-purple-600 mb-2"></i>
-                    <h3 class="text-xl font-bold text-gray-800">Resilience</h3>
-                    <p class="text-gray-600 text-sm">Learn healthy coping mechanisms for big feelings and how to confidently stand up to bullies.</p>
-                </div>
-                <!-- Benefit Card 2 -->
-                <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
-                    <i class="lucide-sparkles icon-md text-purple-600 mb-2"></i>
-                    <h3 class="text-xl font-bold text-gray-800">Self-Worth</h3>
-                    <p class="text-gray-600 text-sm">Identify unique strengths and develop powerful positive self-talk to boost self-esteem.</p>
-                </div>
-                <!-- Benefit Card 3 -->
-                <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
-                    <i class="lucide-message-circle icon-md text-purple-600 mb-2"></i>
-                    <h3 class="text-xl font-bold text-gray-800">Communication</h3>
-                    <p class="text-gray-600 text-sm">Master 'I Feel' statements and active listening for effective, conflict-free interactions.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. Program Details Page -->
-        <section id="details" class="page-section hidden p-6 md:p-10 bg-white rounded-2xl shadow-2xl">
-            <h2 class="text-4xl font-extrabold text-purple-700 mb-6 border-b-4 border-yellow-300 pb-2">
-                Beautiful Treasure: The Confident Me Program Overview
-            </h2>
-            <p class="text-lg text-gray-700 mb-8">
-                This comprehensive 6-week Social-Emotional Learning curriculum is designed to help elementary girls (Ages 6-10) develop a strong sense of self-worth, build emotional resilience, and master the social skills needed to navigate their world with kindness and confidence.
-            </p>
-            
-            <div class="space-y-8">
-                <!-- Week 1: Me, Myself, and I -->
-                <div class="bg-pink-100 p-4 rounded-xl border-l-8 border-pink-500 shadow-md">
-                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
-                        <i class="lucide-user icon-md mr-2"></i> Week 1: Me, Myself, and I
-                    </h3>
-                    <p class="text-purple-600 italic mb-3">Core Focus: Discovering Identity</p>
-                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
-                        <li class="text-sm">My Unique Gem: List three things that make you special and unlike anyone else!</li>
-                        <li class="text-sm">Favorite Things Quiz: Choose your favorite color, food, and animal to create your personal profile!</li>
-                    </ul>
-                </div>
-                <!-- Week 2: My Superpower: Confidence -->
-                <div class="bg-yellow-100 p-4 rounded-xl border-l-8 border-yellow-500 shadow-md">
-                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
-                        <i class="lucide-sparkles icon-md mr-2"></i> Week 2: My Superpower: Confidence
-                    </h3>
-                    <p class="text-purple-600 italic mb-3">Core Focus: Positive Self-Talk</p>
-                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
-                        <li class="text-sm">Affirmation Station: Write one confident sentence about yourself to save in your confidence jar!</li>
-                        <li class="text-sm">Confidence Walk: Practice your superpower pose in the mirror!</li>
-                    </ul>
-                </div>
-                <!-- Week 3: Dealing with Big Feelings & Bullies -->
-                <div class="bg-purple-100 p-4 rounded-xl border-l-8 border-purple-500 shadow-md">
-                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
-                        <i class="lucide-shield icon-md mr-2"></i> Week 3: Dealing with Big Feelings & Bullies
-                    </h3>
-                    <p class="text-purple-600 italic mb-3">Core Focus: Resilience & Safety</p>
-                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
-                        <li class="text-sm">Feelings Check-in: How do you feel today? Identify the emotion and pick a calm-down tool.</li>
-                        <li class="text-sm">The Strong Voice: Write down three ways you can tell a bully 'STOP' clearly and firmly.</li>
-                    </ul>
-                </div>
-                <!-- Week 4: Being a Great Friend -->
-                <div class="bg-red-100 p-4 rounded-xl border-l-8 border-red-500 shadow-md">
-                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
-                        <i class="lucide-heart icon-md mr-2"></i> Week 4: Being a Great Friend
-                    </h3>
-                    <p class="text-purple-600 italic mb-3">Core Focus: Empathy and Kindness</p>
-                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
-                        <li class="text-sm">Kindness Ripple Log: What is one kind thing you did for someone else this week?</li>
-                        <li class="text-sm">Empathy Glasses: Imagine your friend is sad. What do you think they need right now?</li>
-                    </ul>
-                </div>
-                <!-- Week 5: Making and Keeping Friends -->
-                <div class="bg-green-100 p-4 rounded-xl border-l-8 border-green-500 shadow-md">
-                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
-                        <i class="lucide-smile icon-md mr-2"></i> Week 5: Making and Keeping Friends
-                    </h3>
-                    <p class="text-purple-600 italic mb-3">Core Focus: Social Skills</p>
-                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
-                        <li class="text-sm">Conversation Starter Drill: Practice two ways to say hello to a new person (e.g., 'I like your...').</li>
-                        <li class="text-sm">Friendship Recipe: List the 3 best 'ingredients' for a good friendship (e.g., listening, sharing).</li>
-                    </ul>
-                </div>
-                <!-- Week 6: Powerful Communication -->
-                <div class="bg-blue-100 p-4 rounded-xl border-l-8 border-blue-500 shadow-md">
-                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
-                        <i class="lucide-message-circle icon-md mr-2"></i> Week 6: Powerful Communication
-                    </h3>
-                    <p class="text-purple-600 italic mb-3">Core Focus: Assertive Voice</p>
-                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
-                        <li class="text-sm">The 'I Feel' Builder: Write one 'I feel...' statement about something that bothered you today.</li>
-                        <li class="text-sm">Active Listening Game: List the three rules of being a super listener (look, wait, don't interrupt).</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-10 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded">
-                <p class="font-semibold">This program directly addresses common challenges faced by girls today, providing practical tools for confidence, conflict resolution, and positive peer engagement.</p>
-            </div>
-        </section>
-
-        <!-- 3. Contact Page -->
-        <section id="contact" class="page-section hidden p-6 md:p-10 bg-white rounded-2xl shadow-2xl text-center">
-            <i class="lucide-mail icon-lg text-purple-600 mx-auto mb-4"></i>
-            <h2 class="text-4xl font-extrabold text-purple-700 mb-4">
-                Get Started on Your Journey
-            </h2>
-            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                Whether you are a parent looking to enroll your daughter or a school principal interested in a partnership, we are here to help!
-            </p>
-
-            <div class="space-y-4 max-w-sm mx-auto p-6 bg-gray-50 rounded-xl border border-gray-200">
-                <p class="text-xl font-semibold text-gray-800">Enrollment & Inquiries</p>
-                <p class="text-purple-600">
-                    <span class="font-bold block">Email:</span>
-                    <a href="mailto:info@beautifultreasure.com" class="hover:underline">info@beautifultreasure.com</a>
-                </p>
-                <p class="text-purple-600">
-                    <span class="font-bold block">Phone:</span>
-                    (555) 123-4567
-                </p>
-                <p class="text-sm pt-4 text-gray-500">
-                    *Mock contact details. Please fill in your actual information.*
-                </p>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- JavaScript for simple hash-based navigation (Wix equivalent would be linking to internal pages) -->
-    <script>
-        const navItems = document.querySelectorAll('.nav-item');
-        const sections = document.querySelectorAll('.page-section');
-
-        function updateView() {
-            // Get the hash from the URL, default to #home
-            const hash = window.location.hash || '#home';
-            
-            sections.forEach(section => {
-                section.classList.add('hidden');
-                // Remove hidden class if the ID matches the hash
-                if ('#' + section.id === hash) {
-                    section.classList.remove('hidden');
-                }
-            });
-            
-            // Highlight the active nav item
-            navItems.forEach(item => {
-                item.classList.remove('bg-purple-600', 'text-white', 'shadow-md');
-                item.classList.add('text-purple-600', 'hover:bg-purple-100');
-                
-                if (item.getAttribute('href') === hash) {
-                    item.classList.add('bg-purple-600', 'text-white', 'shadow-md');
-                }
-            });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+    const handleSubmit = (activityId, type) => {
+        if (type === 'input' && !activityState[activityId]) {
+            setMessage('Please write your thoughts before submitting!');
+            return;
         }
 
-        // Initialize and listen for hash changes
-        window.addEventListener('hashchange', updateView);
-        window.addEventListener('load', updateView);
+        // Mark the current activity as done
+        setActivityState(prev => ({ ...prev, [`done_${activityId}`]: true }));
+        setMessage('Great job! Your answer has been saved to your treasure journal!');
+        
+        // Logic to check if the entire level is complete
+        const allActivities = levelData.activities.map(a => a.id);
+        
+        // Check if all activities, including the one just submitted, are done
+        // We use a short delay to allow the 'Activity Saved!' message to show
+        const isLevelComplete = allActivities.every(id => activityState[`done_${id}`] || id === activityId);
+        
+        if (isLevelComplete) {
+            setTimeout(() => {
+                setCompletedLevels(prev => {
+                    const newProgress = { ...prev, [levelData.id]: true };
+                    // Unlock the next level if it exists
+                    if (levelData.id < treasureLevels.length) {
+                        newProgress[levelData.id + 1] = false; 
+                    }
+                    return newProgress;
+                });
+                setMessage(`🎉 Level ${levelData.id} COMPLETE! Level ${levelData.id < treasureLevels.length ? levelData.id + 1 + ' is now unlocked!' : 'You completed the entire program!'}`);
+            }, 1500);
+        }
+    };
+    
+    const totalActivities = levelData.activities.length;
+    const completedActivities = levelData.activities.filter(a => activityState[`done_${a.id}`]).length;
+    const progress = (completedActivities / totalActivities) * 100;
 
-        // Styling for nav items (moved from React)
-        navItems.forEach(item => {
-            item.classList.add('flex', 'items-center', 'px-3', 'py-1', 'rounded-full', 'text-sm', 'font-semibold', 'transition', 'duration-150');
-        });
-    </script>
-    <script>
-        // Use Lucide to replace the icons after load
-        lucide.createIcons();
-    </script>
-</body>
-</html>
+    return (
+        <div className="mt-8 p-6 bg-white rounded-2xl shadow-2xl border-4 border-purple-500/50">
+            <div className={`${levelData.border} ${levelData.color} p-4 rounded-xl mb-4`}>
+                <h3 className="text-2xl font-extrabold text-purple-700 mb-1">
+                    Week {levelData.id}: {levelData.theme}
+                </h3>
+                <p className="text-lg text-gray-600 italic">{levelData.focus}</p>
+            </div>
+            
+            <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                <div 
+                    className="bg-green-400 h-2.5 rounded-full transition-all duration-700" 
+                    style={{ width: `${progress}%` }}
+                ></div>
+            </div>
+
+            {levelData.activities.map((activity) => {
+                const isDone = activityState[`done_${activity.id}`];
+
+                return (
+                    <div key={activity.id} className="mb-6 p-4 border border-gray-200 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                            <h4 className="text-xl font-semibold text-gray-800 flex items-center">
+                                <Lightbulb className="w-5 h-5 mr-2 text-yellow-500" />
+                                {activity.title}
+                            </h4>
+                            {isDone && <CheckCircle className="w-6 h-6 text-green-500" />}
+                        </div>
+                        <p className="text-gray-600 mb-3">{activity.prompt}</p>
+
+                        {activity.type === 'input' && (
+                            <textarea
+                                className="w-full p-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 transition"
+                                rows="3"
+                                placeholder="Write your beautiful thought here..."
+                                value={activityState[activity.id] || ''}
+                                onChange={(e) => handleInput(activity.id, e.target.value)}
+                                disabled={isDone}
+                            ></textarea>
+                        )}
+                        
+                        {/* Mock interactions for non-input types */}
+                        {activity.type !== 'input' && (
+                             <p className={`p-2 rounded text-sm ${activity.type === 'choice' ? 'bg-purple-50 text-purple-700' : 'bg-yellow-50 text-yellow-700'}`}>
+                                {activity.type === 'choice' ? 
+                                    '*Mock Choice Activity: Time to reflect and choose your answer!*' : 
+                                    '*Mock Reflection Prompt: Practice this skill out loud or in your head!*'
+                                }
+                            </p>
+                        )}
+
+                        <button
+                            onClick={() => handleSubmit(activity.id, activity.type)}
+                            disabled={isDone}
+                            className={`mt-3 py-2 px-4 rounded-full font-bold transition duration-150 shadow-md ${
+                                isDone 
+                                ? 'bg-green-400 text-white cursor-default' 
+                                : 'bg-purple-500 hover:bg-purple-600 text-white'
+                            }`}
+                        >
+                            {isDone ? 'Activity Saved!' : 'Complete Activity'}
+                        </button>
+                    </div>
+                );
+            })}
+            
+            {message && (
+                <div className="mt-4 p-3 bg-indigo-50 border border-indigo-300 text-indigo-800 rounded-lg flex items-center">
+                    <MessageSquare className="w-5 h-5 mr-2" /> {message}
+                </div>
+            )}
+        </div>
+    );
+};
+
+/** Portal View: Main orchestrator for the member experience. */
+const PortalView = () => {
+    // States for the portal functionality
+    const [completedLevels, setCompletedLevels] = useState(initialProgress);
+    const [currentLevel, setCurrentLevel] = useState(1);
+    
+    // Auto-select the highest unlocked level when progress changes
+    useEffect(() => {
+        const highestUnlocked = treasureLevels.reduce((max, level) => {
+            if (completedLevels[level.id] || (level.id > 1 && completedLevels[level.id - 1])) {
+                return level.id;
+            }
+            return max;
+        }, 1);
+        setCurrentLevel(highestUnlocked);
+    }, [completedLevels]);
+
+    const currentLevelData = useMemo(() => 
+        treasureLevels.find(level => level.id === currentLevel)
+    , [currentLevel]);
+    
+    const setLevel = (id) => {
+        setCurrentLevel(id);
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    }
+
+    return (
+        <div className="max-w-7xl mx-auto p-4 md:p-8">
+            <h2 className="text-4xl font-extrabold text-gray-800 mb-6 text-center">
+                Your Beautiful Treasure Journey
+            </h2>
+            
+            {/* 1. Treasure Map Navigation */}
+            <TreasureMap 
+                currentLevel={currentLevel} 
+                setLevel={setLevel} 
+                completedLevels={completedLevels} 
+            />
+
+            {/* 2. Level Content */}
+            {currentLevelData ? (
+                <LevelView 
+                    levelData={currentLevelData} 
+                    setCompletedLevels={setCompletedLevels}
+                />
+            ) : (
+                <div className="mt-8 text-center p-12 bg-white rounded-xl shadow-md text-xl text-gray-500">
+                    Select a level from the map to begin your adventure!
+                </div>
+            )}
+            
+            {/* 3. Footer / Encouragement */}
+            <div className="mt-12 text-center p-6 bg-purple-50 rounded-xl shadow-inner border border-purple-200">
+                <p className="text-purple-700 font-semibold text-lg flex items-center justify-center">
+                    <Zap className="w-6 h-6 mr-2 text-yellow-500" fill="gold" />
+                    Remember: You are capable, you are kind, and your voice matters!
+                </p>
+            </div>
+        </div>
+    );
+}
+
+// Simple App Wrapper for demonstration/testing the Portal component
+const App = () => (
+    <div className="min-h-screen bg-gray-50 font-sans p-4">
+        <header className="bg-white shadow-lg p-4 mb-4 rounded-xl text-center">
+            <h1 className="text-3xl font-extrabold text-purple-700 flex items-center justify-center">
+                <Crown className="w-8 h-8 text-yellow-500 mr-2" fill="gold" />
+                Beautiful Treasure Portal (Standalone Demo)
+            </h1>
+        </header>
+        <PortalView />
+    </div>
+);
+
+export default App;
