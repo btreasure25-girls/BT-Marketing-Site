@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Treasure - Confidence Program</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom styles for Wix compatibility and aesthetic polish */
+        :root {
+            --purple-700: #6d28d9;
+            --yellow-500: #f59e0b;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* bg-gray-50 */
+        }
+        .icon-lg { width: 40px; height: 40px; }
+        .icon-md { width: 24px; height: 24px; }
+
+        /* Velo/Wix Note: In a real Wix site, you would use Wix's internal linking for navigation */
+    </style>
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-lg sticky top-0 z-20 border-b-4 border-purple-300">
+        <div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto p-4">
+            <div class="flex items-center space-x-2 mb-3 md:mb-0">
+                <i class="lucide-crown icon-md text-yellow-500" style="fill:gold;"></i>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-purple-700 tracking-tight">
+                    Beautiful Treasure
+                </h1>
+            </div>
+
+            <!-- Navigation Buttons (These would be Wix page links) -->
+            <nav class="flex space-x-2 sm:space-x-4">
+                <a href="#home" class="nav-item">Home</a>
+                <a href="#details" class="nav-item">Program Details</a>
+                <a href="#contact" class="nav-item">Contact</a>
+                <!-- The Portal link requires custom Velo logic for login/member areas -->
+            </nav>
+
+            <button class="mt-3 md:mt-0 px-4 py-1.5 rounded-full font-bold text-sm transition duration-150 shadow-md bg-green-500 hover:bg-green-600 text-white">
+                Login / Enroll
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8">
+
+        <!-- --- Page Sections --- -->
+
+        <!-- 1. Home Page -->
+        <section id="home" class="page-section text-center p-8 md:p-12 bg-white rounded-2xl shadow-2xl">
+            <i class="lucide-crown icon-lg text-yellow-500 mx-auto mb-4" style="fill:gold;"></i>
+            <h2 class="text-5xl font-extrabold text-purple-800 mb-4">
+                Unlock Your Inner Treasure!
+            </h2>
+            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                Beautiful Treasure is the 6-week program designed to build **unshakeable self-worth**, teach girls to **overcome bullying**, and develop **assertive communication** skills.
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-10">
+                <a href="#details" class="bg-red-500 text-white py-3 px-8 rounded-full text-lg font-bold hover:bg-red-600 transition shadow-lg">
+                    See Program Details
+                </a>
+                <a href="#contact" class="bg-purple-500 text-white py-3 px-8 rounded-full text-lg font-bold hover:bg-purple-600 transition shadow-lg">
+                    Enroll Today
+                </a>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mt-12 text-left">
+                <!-- Benefit Card 1 -->
+                <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
+                    <i class="lucide-shield icon-md text-purple-600 mb-2"></i>
+                    <h3 class="text-xl font-bold text-gray-800">Resilience</h3>
+                    <p class="text-gray-600 text-sm">Learn healthy coping mechanisms for big feelings and how to confidently stand up to bullies.</p>
+                </div>
+                <!-- Benefit Card 2 -->
+                <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
+                    <i class="lucide-sparkles icon-md text-purple-600 mb-2"></i>
+                    <h3 class="text-xl font-bold text-gray-800">Self-Worth</h3>
+                    <p class="text-gray-600 text-sm">Identify unique strengths and develop powerful positive self-talk to boost self-esteem.</p>
+                </div>
+                <!-- Benefit Card 3 -->
+                <div class="p-4 bg-purple-50 rounded-xl border border-purple-200">
+                    <i class="lucide-message-circle icon-md text-purple-600 mb-2"></i>
+                    <h3 class="text-xl font-bold text-gray-800">Communication</h3>
+                    <p class="text-gray-600 text-sm">Master 'I Feel' statements and active listening for effective, conflict-free interactions.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Program Details Page -->
+        <section id="details" class="page-section hidden p-6 md:p-10 bg-white rounded-2xl shadow-2xl">
+            <h2 class="text-4xl font-extrabold text-purple-700 mb-6 border-b-4 border-yellow-300 pb-2">
+                Beautiful Treasure: The Confident Me Program Overview
+            </h2>
+            <p class="text-lg text-gray-700 mb-8">
+                This comprehensive 6-week Social-Emotional Learning curriculum is designed to help elementary girls (Ages 6-10) develop a strong sense of self-worth, build emotional resilience, and master the social skills needed to navigate their world with kindness and confidence.
+            </p>
+            
+            <div class="space-y-8">
+                <!-- Week 1: Me, Myself, and I -->
+                <div class="bg-pink-100 p-4 rounded-xl border-l-8 border-pink-500 shadow-md">
+                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
+                        <i class="lucide-user icon-md mr-2"></i> Week 1: Me, Myself, and I
+                    </h3>
+                    <p class="text-purple-600 italic mb-3">Core Focus: Discovering Identity</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
+                        <li class="text-sm">My Unique Gem: List three things that make you special and unlike anyone else!</li>
+                        <li class="text-sm">Favorite Things Quiz: Choose your favorite color, food, and animal to create your personal profile!</li>
+                    </ul>
+                </div>
+                <!-- Week 2: My Superpower: Confidence -->
+                <div class="bg-yellow-100 p-4 rounded-xl border-l-8 border-yellow-500 shadow-md">
+                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
+                        <i class="lucide-sparkles icon-md mr-2"></i> Week 2: My Superpower: Confidence
+                    </h3>
+                    <p class="text-purple-600 italic mb-3">Core Focus: Positive Self-Talk</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
+                        <li class="text-sm">Affirmation Station: Write one confident sentence about yourself to save in your confidence jar!</li>
+                        <li class="text-sm">Confidence Walk: Practice your superpower pose in the mirror!</li>
+                    </ul>
+                </div>
+                <!-- Week 3: Dealing with Big Feelings & Bullies -->
+                <div class="bg-purple-100 p-4 rounded-xl border-l-8 border-purple-500 shadow-md">
+                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
+                        <i class="lucide-shield icon-md mr-2"></i> Week 3: Dealing with Big Feelings & Bullies
+                    </h3>
+                    <p class="text-purple-600 italic mb-3">Core Focus: Resilience & Safety</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
+                        <li class="text-sm">Feelings Check-in: How do you feel today? Identify the emotion and pick a calm-down tool.</li>
+                        <li class="text-sm">The Strong Voice: Write down three ways you can tell a bully 'STOP' clearly and firmly.</li>
+                    </ul>
+                </div>
+                <!-- Week 4: Being a Great Friend -->
+                <div class="bg-red-100 p-4 rounded-xl border-l-8 border-red-500 shadow-md">
+                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
+                        <i class="lucide-heart icon-md mr-2"></i> Week 4: Being a Great Friend
+                    </h3>
+                    <p class="text-purple-600 italic mb-3">Core Focus: Empathy and Kindness</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
+                        <li class="text-sm">Kindness Ripple Log: What is one kind thing you did for someone else this week?</li>
+                        <li class="text-sm">Empathy Glasses: Imagine your friend is sad. What do you think they need right now?</li>
+                    </ul>
+                </div>
+                <!-- Week 5: Making and Keeping Friends -->
+                <div class="bg-green-100 p-4 rounded-xl border-l-8 border-green-500 shadow-md">
+                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
+                        <i class="lucide-smile icon-md mr-2"></i> Week 5: Making and Keeping Friends
+                    </h3>
+                    <p class="text-purple-600 italic mb-3">Core Focus: Social Skills</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
+                        <li class="text-sm">Conversation Starter Drill: Practice two ways to say hello to a new person (e.g., 'I like your...').</li>
+                        <li class="text-sm">Friendship Recipe: List the 3 best 'ingredients' for a good friendship (e.g., listening, sharing).</li>
+                    </ul>
+                </div>
+                <!-- Week 6: Powerful Communication -->
+                <div class="bg-blue-100 p-4 rounded-xl border-l-8 border-blue-500 shadow-md">
+                    <h3 class="text-2xl font-bold text-purple-800 mb-1 flex items-center">
+                        <i class="lucide-message-circle icon-md mr-2"></i> Week 6: Powerful Communication
+                    </h3>
+                    <p class="text-purple-600 italic mb-3">Core Focus: Assertive Voice</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
+                        <li class="text-sm">The 'I Feel' Builder: Write one 'I feel...' statement about something that bothered you today.</li>
+                        <li class="text-sm">Active Listening Game: List the three rules of being a super listener (look, wait, don't interrupt).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-10 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded">
+                <p class="font-semibold">This program directly addresses common challenges faced by girls today, providing practical tools for confidence, conflict resolution, and positive peer engagement.</p>
+            </div>
+        </section>
+
+        <!-- 3. Contact Page -->
+        <section id="contact" class="page-section hidden p-6 md:p-10 bg-white rounded-2xl shadow-2xl text-center">
+            <i class="lucide-mail icon-lg text-purple-600 mx-auto mb-4"></i>
+            <h2 class="text-4xl font-extrabold text-purple-700 mb-4">
+                Get Started on Your Journey
+            </h2>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                Whether you are a parent looking to enroll your daughter or a school principal interested in a partnership, we are here to help!
+            </p>
+
+            <div class="space-y-4 max-w-sm mx-auto p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <p class="text-xl font-semibold text-gray-800">Enrollment & Inquiries</p>
+                <p class="text-purple-600">
+                    <span class="font-bold block">Email:</span>
+                    <a href="mailto:info@beautifultreasure.com" class="hover:underline">info@beautifultreasure.com</a>
+                </p>
+                <p class="text-purple-600">
+                    <span class="font-bold block">Phone:</span>
+                    (555) 123-4567
+                </p>
+                <p class="text-sm pt-4 text-gray-500">
+                    *Mock contact details. Please fill in your actual information.*
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript for simple hash-based navigation (Wix equivalent would be linking to internal pages) -->
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.page-section');
+
+        function updateView() {
+            // Get the hash from the URL, default to #home
+            const hash = window.location.hash || '#home';
+            
+            sections.forEach(section => {
+                section.classList.add('hidden');
+                // Remove hidden class if the ID matches the hash
+                if ('#' + section.id === hash) {
+                    section.classList.remove('hidden');
+                }
+            });
+            
+            // Highlight the active nav item
+            navItems.forEach(item => {
+                item.classList.remove('bg-purple-600', 'text-white', 'shadow-md');
+                item.classList.add('text-purple-600', 'hover:bg-purple-100');
+                
+                if (item.getAttribute('href') === hash) {
+                    item.classList.add('bg-purple-600', 'text-white', 'shadow-md');
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize and listen for hash changes
+        window.addEventListener('hashchange', updateView);
+        window.addEventListener('load', updateView);
+
+        // Styling for nav items (moved from React)
+        navItems.forEach(item => {
+            item.classList.add('flex', 'items-center', 'px-3', 'py-1', 'rounded-full', 'text-sm', 'font-semibold', 'transition', 'duration-150');
+        });
+    </script>
+    <script>
+        // Use Lucide to replace the icons after load
+        lucide.createIcons();
+    </script>
+</body>
+</html>
